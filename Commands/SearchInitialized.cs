@@ -115,15 +115,24 @@ public static class SearchInitialized
     {
         try
         {
-            var processInfo = new ProcessStartInfo
+            var processInfo = new ProcessStartInfo();
+            
+            // On Windows, we need to use cmd.exe to properly resolve npm
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                FileName = "npm",
-                Arguments = "list -g @anthropic-ai/claude-code --depth=0",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+                processInfo.FileName = "cmd.exe";
+                processInfo.Arguments = "/c npm list -g @anthropic-ai/claude-code --depth=0";
+            }
+            else
+            {
+                processInfo.FileName = "npm";
+                processInfo.Arguments = "list -g @anthropic-ai/claude-code --depth=0";
+            }
+            
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+            processInfo.UseShellExecute = false;
+            processInfo.CreateNoWindow = true;
             
             using var process = Process.Start(processInfo);
             if (process == null) return false;

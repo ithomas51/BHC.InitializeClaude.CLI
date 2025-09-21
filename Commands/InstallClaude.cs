@@ -184,15 +184,24 @@ public static class InstallClaude
     {
         try
         {
-            var processInfo = new ProcessStartInfo
+            var processInfo = new ProcessStartInfo();
+            
+            // On Windows, we need to use cmd.exe to properly resolve npm
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                FileName = "npm",
-                Arguments = "--version",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+                processInfo.FileName = "cmd.exe";
+                processInfo.Arguments = "/c npm --version";
+            }
+            else
+            {
+                processInfo.FileName = "npm";
+                processInfo.Arguments = "--version";
+            }
+            
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+            processInfo.UseShellExecute = false;
+            processInfo.CreateNoWindow = true;
             
             using var process = Process.Start(processInfo);
             if (process == null) return false;
@@ -210,15 +219,24 @@ public static class InstallClaude
     {
         try
         {
-            var processInfo = new ProcessStartInfo
+            var processInfo = new ProcessStartInfo();
+            
+            // On Windows, we need to use cmd.exe to properly resolve npm
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                FileName = "npm",
-                Arguments = "list -g @anthropic-ai/claude-code --depth=0",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
+                processInfo.FileName = "cmd.exe";
+                processInfo.Arguments = "/c npm list -g @anthropic-ai/claude-code --depth=0";
+            }
+            else
+            {
+                processInfo.FileName = "npm";
+                processInfo.Arguments = "list -g @anthropic-ai/claude-code --depth=0";
+            }
+            
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+            processInfo.UseShellExecute = false;
+            processInfo.CreateNoWindow = true;
             
             using var process = Process.Start(processInfo);
             if (process == null) return false;
@@ -240,15 +258,24 @@ public static class InstallClaude
         {
             Console.WriteLine("Installing @anthropic-ai/claude-code globally...");
             
-            var processInfo = new ProcessStartInfo
+            var processInfo = new ProcessStartInfo();
+            
+            // On Windows, we need to use cmd.exe to properly resolve npm
+            if (Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
-                FileName = "npm",
-                Arguments = "install -g @anthropic-ai/claude-code",
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = !verbose
-            };
+                processInfo.FileName = "cmd.exe";
+                processInfo.Arguments = "/c npm install -g @anthropic-ai/claude-code";
+            }
+            else
+            {
+                processInfo.FileName = "npm";
+                processInfo.Arguments = "install -g @anthropic-ai/claude-code";
+            }
+            
+            processInfo.RedirectStandardOutput = true;
+            processInfo.RedirectStandardError = true;
+            processInfo.UseShellExecute = false;
+            processInfo.CreateNoWindow = !verbose;
             
             using var process = Process.Start(processInfo);
             if (process == null) return false;
